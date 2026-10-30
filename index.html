@@ -138,10 +138,6 @@ header>div:first-child{min-width:0}
           <label for="nameIn">Nombre y apellido</label>
           <input type="text" id="nameIn" maxlength="80" placeholder="Ej.: Juana Pérez" required>
         </div>
-        <div class="field">
-          <label for="noteIn">Nota <span class="hint" style="display:inline">(opcional)</span></label>
-          <input type="text" id="noteIn" maxlength="80" placeholder="Ej.: +1, amiga de la facu">
-        </div>
         <p class="err" id="addErr" hidden></p>
         <button class="btn primary" type="submit" id="addBtn">Anotar</button>
       </form>
@@ -230,13 +226,13 @@ header>div:first-child{min-width:0}
 
   $("addForm").addEventListener("submit", async e=>{
     e.preventDefault();
-    const name=$("nameIn").value, note=$("noteIn").value;
+    const name=$("nameIn").value, note="";
     if(!norm(name)) return;
     $("addBtn").disabled=true; $("addBtn").textContent="Anotando…";
     const r = await addNames([{name,note}]);
     $("addBtn").disabled=false; $("addBtn").textContent="Anotar";
     if(r.dup.length){ $("addErr").textContent=`${r.dup[0]} ya está en la lista.`; $("addErr").hidden=false; }
-    else if(r.n){ $("addErr").hidden=true; $("nameIn").value=""; $("noteIn").value=""; toast("¡Anotado!"); }
+    else if(r.n){ $("addErr").hidden=true; $("nameIn").value=""; toast("¡Anotado!"); }
     $("nameIn").focus();
   });
   $("bulkBtn").onclick = async ()=>{
