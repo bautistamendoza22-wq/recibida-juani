@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Recibida Marti Rec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Shrikhand&family=Gloock&family=JetBrains+Mono:wght@400;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#F6E4EA; --surface:#FFF7F9; --ink:#3A1E2B; --muted:#7A5867; --line:#EBCBD6;
+  --accent:#C2386F; --accent-ink:#ffffff; --accent-soft:#F9DCE6;
+  --g1:#E0679A; --g2:#F7A8C4; --g3:#C2386F; --g4:#FFC9B9;
+  --bad:#a3213b; --bad-soft:#f6d3da;
+  --f-display:"Gloock",Georgia,serif; --f-body:"Fredoka",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+body::before,body::after{content:"";position:fixed;inset:-12vh -12vw;z-index:-1;pointer-events:none;will-change:transform}
+body::before{background:
+  radial-gradient(55vw 45vh at 88% 14%,color-mix(in oklab,var(--g1) 28%,transparent),transparent 70%),
+  radial-gradient(50vw 45vh at 78% 92%,color-mix(in oklab,var(--g3) 22%,transparent),transparent 70%);
+  animation:bgDriftA 13s ease-in-out infinite alternate}
+body::after{background:
+  radial-gradient(45vw 55vh at 6% 55%,color-mix(in oklab,var(--g2) 34%,transparent),transparent 70%),
+  radial-gradient(35vw 35vh at 34% 8%,color-mix(in oklab,var(--g4) 30%,transparent),transparent 70%);
+  animation:bgDriftB 11s ease-in-out infinite alternate}
+@keyframes bgDriftA{from{transform:translate(0,0) scale(1)}to{transform:translate(-7vw,6vh) scale(1.08)}}
+@keyframes bgDriftB{from{transform:translate(0,0) scale(1.05)}to{transform:translate(8vw,-5vh) scale(.97)}}
+@keyframes inUp{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){body::before,body::after{animation:none}}
+
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(2.4rem,8vw,3.6rem);line-height:1.02;color:var(--accent)}
+h2{font-size:1.3rem}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:9px 14px;font-weight:700;white-space:nowrap}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:hover{border-color:var(--accent)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+input[type=text],input[type=password]{width:100%;min-width:0;font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0;animation:inUp .4s ease both}
+.hint{font-size:.9rem;color:var(--muted);margin:0}
+.err{font-size:.9rem;color:var(--bad);margin:0;font-weight:600}
+
+/* Login */
+.login{min-height:100vh;display:grid;place-items:center;padding:24px}
+.login .panel{width:min(420px,100%);gap:16px;padding:28px 24px}
+.login h1{text-align:center}
+.login .sub{text-align:center;margin-top:-6px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-weight:600;font-size:.9rem}
+
+/* App */
+.wrap{max-width:1100px;margin:0 auto;padding-block:clamp(28px,5vw,52px) 64px;
+  padding-left:max(clamp(16px,4vw,48px),env(safe-area-inset-left,0px));padding-right:max(clamp(16px,4vw,48px),env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:28px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+header>div:first-child{min-width:0}
+.hbtns{display:flex;gap:8px;flex-wrap:wrap}
+.strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;min-width:0}
+.stat b{font-family:"Shrikhand",var(--f-display);font-size:clamp(1.9rem,6vw,2.5rem);font-weight:400;line-height:1.05;color:var(--accent)}
+.stat span{font-size:.95rem;color:var(--muted)}
+.cols{display:flex;flex-direction:column;gap:28px}
+@media (min-width:860px){.cols{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);align-items:start}}
+.addform{display:flex;flex-direction:column;gap:10px}
+.addform .row{display:flex;gap:8px}
+.listhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.list li{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid color-mix(in oklab,var(--accent) 30%,var(--line));
+  background:color-mix(in oklab,var(--accent) 6%,var(--surface));border-left:4px solid var(--accent);border-radius:8px;min-width:0;animation:inUp .3s ease both}
+.list .n{font-family:var(--f-mono);font-size:.85rem;color:var(--muted);min-width:2.2em;text-align:right}
+.list .nm{flex:1;min-width:0;overflow-wrap:anywhere;font-weight:500}
+.list .nm small{display:block;font-weight:400;font-size:.78rem;color:var(--muted)}
+.del{border:0;background:none;color:var(--muted);border-radius:6px;padding:4px 8px;font-size:.85rem;font-weight:600}
+.del:hover{background:var(--bad-soft);color:var(--bad)}
+.del.sure{background:var(--bad);color:#fff}
+.list li.empty{border-style:dashed;border-left-width:1px;background:none;color:var(--muted);justify-content:center}
+.search{max-width:220px}
+.status{font-size:.8rem;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-weight:600;font-size:.9rem;z-index:10;max-width:90vw;text-align:center}
+@media (max-width:600px){.listhead .search{max-width:none;flex:1 1 100%}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section class="login" id="loginView">
+  <form class="panel" id="loginForm" autocomplete="off">
+    <div>
+      <p class="eyebrow" style="text-align:center;margin:0 0 6px">Lista de invitados</p>
+      <h1>Recibida Marti</h1>
+    </div>
+    <p class="hint sub">Ingresá para ver y anotar gente a la lista.</p>
+    <div class="field">
+      <label for="uIn">Usuario</label>
+      <input type="text" id="uIn" autocapitalize="none" spellcheck="false" required>
+    </div>
+    <div class="field">
+      <label for="pIn">Contraseña</label>
+      <input type="password" id="pIn" required>
+    </div>
+    <p class="err" id="loginErr" hidden>Usuario o contraseña incorrectos.</p>
+    <button class="btn primary" type="submit">Entrar</button>
+  </form>
+</section>
+
+<!-- APP -->
+<div class="wrap" id="appView" hidden>
+  <header>
+    <div>
+      <p class="eyebrow" style="margin:0 0 6px">Lista de invitados</p>
+      <h1>Recibida Marti</h1>
+    </div>
+    <div class="hbtns">
+      <button class="btn" id="logoutBtn" type="button">Salir</button>
+    </div>
+  </header>
+
+  <div class="strip">
+    <div class="stat"><b id="statCount">0</b><span>anotados</span></div>
+    <div class="stat"><b id="statLast">—</b><span>último en sumarse</span></div>
+  </div>
+
+  <div class="cols">
+    <section class="panel">
+      <h2>Anotar gente</h2>
+      <form class="addform" id="addForm">
+        <div class="field">
+          <label for="nameIn">Nombre y apellido</label>
+          <input type="text" id="nameIn" maxlength="80" placeholder="Ej.: Juana Pérez" required>
+        </div>
+        <div class="field">
+          <label for="noteIn">Nota <span class="hint" style="display:inline">(opcional)</span></label>
+          <input type="text" id="noteIn" maxlength="80" placeholder="Ej.: +1, amiga de la facu">
+        </div>
+        <p class="err" id="addErr" hidden></p>
+        <button class="btn primary" type="submit" id="addBtn">Anotar</button>
+      </form>
+      <p class="hint">Podés pegar varios nombres a la vez, uno por renglón o separados por coma.</p>
+      <textarea id="bulkIn" rows="3" style="width:100%;font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical" placeholder="Juana Pérez&#10;Lucas Gómez"></textarea>
+      <button class="btn" type="button" id="bulkBtn">Anotar todos</button>
+      <p class="status" id="syncStatus">Conectando…</p>
+    </section>
+
+    <section class="panel">
+      <div class="listhead">
+        <h2>La lista</h2>
+        <input type="text" class="search" id="searchIn" placeholder="Buscar…">
+        <button class="btn primary" type="button" id="pdfBtn">Exportar a PDF</button>
+      </div>
+      <ul class="list" id="list"><li class="empty">Todavía no hay nadie anotado.</li></ul>
+    </section>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+  // 👇 Pegá acá el link de la aplicación web de Apps Script (termina en /exec)
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIjSquBezSqgfBWZuSMFUmpfmHb5sD8pQBeLmE5g-7hEfbnToACSiPa55ZNIPuF9XD/exec";
+
+  const USER = "abogadarecondo", PASS = "cloe", SKEY = "recibidaMartiAuth";
+  const $ = id => document.getElementById(id);
+  const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/\s+/g," ").trim();
+  let items = [];          // {id,name,note,ts}
+  let useLocal = false, readOnly = false, started = false;
+
+  // ---------- toast ----------
+  let tt; function toast(msg){ const t=$("toast"); t.textContent=msg; t.hidden=false; clearTimeout(tt); tt=setTimeout(()=>t.hidden=true,2600); }
+
+  // ---------- login ----------
+  function isAuthed(){ try{ return sessionStorage.getItem(SKEY)==="1"; }catch(e){ return window.__rmAuth===true; } }
+  function setAuthed(v){ window.__rmAuth=v; try{ v ? sessionStorage.setItem(SKEY,"1") : sessionStorage.removeItem(SKEY); }catch(e){} }
+  function showApp(){ $("loginView").hidden=true; $("appView").hidden=false; if(!started){ started=true; startData(); } }
+  function showLogin(){ $("appView").hidden=true; $("loginView").hidden=false; $("uIn").value=""; $("pIn").value=""; $("uIn").focus(); }
+  $("loginForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const ok = norm($("uIn").value).replace(/\s/g,"")===USER && $("pIn").value.trim().toLowerCase()===PASS;
+    if(ok){ $("loginErr").hidden=true; setAuthed(true); showApp(); }
+    else { $("loginErr").hidden=false; $("pIn").value=""; $("pIn").focus(); }
+  });
+  $("logoutBtn").onclick = () => { setAuthed(false); showLogin(); };
+  if(isAuthed()) showApp(); else showLogin();
+
+  // ---------- data (Google Sheets) ----------
+  const LIVE = /^https:\/\/script\.google\.com\//.test(SCRIPT_URL);
+  function loadLocal(){ try{ items = JSON.parse(localStorage.getItem("rmList")||"[]"); }catch(e){ items=[]; } render(); }
+  function saveLocal(){ try{ localStorage.setItem("rmList", JSON.stringify(items)); }catch(e){} }
+  let busy=false;
+  async function api(payload){
+    const r = payload
+      ? await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)})
+      : await fetch(SCRIPT_URL+"?t="+Date.now());
+    const j = await r.json(); if(!j.ok) throw new Error(j.error||"error"); return j;
+  }
+  function setItems(list){ items=(list||[]).slice().sort((a,b)=>a.ts-b.ts); render(); }
+  async function refresh(){
+    if(busy) return;
+    try{ const j=await api(); if(!busy) setItems(j.items); $("syncStatus").textContent="Lista compartida · se actualiza sola cada 15 segundos."; }
+    catch(e){ $("syncStatus").textContent="No se pudo conectar con la lista. Revisá tu conexión; se reintenta sola."; }
+  }
+  function startData(){
+    if(!LIVE){ useLocal=true; loadLocal(); $("syncStatus").textContent="⚠ Falta pegar el link de la planilla (SCRIPT_URL): por ahora la lista se guarda sólo en este navegador."; return; }
+    refresh(); setInterval(refresh,15000);
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refresh(); });
+  }
+
+  async function addNames(list){
+    if(useLocal){
+      const existing=new Set(items.map(i=>norm(i.name))); let n=0; const dup=[];
+      list.forEach((it,k)=>{ const key=norm(it.name); if(!key) return; if(existing.has(key)){dup.push(it.name);return;} existing.add(key);
+        items.push({id:"l"+Date.now()+k, name:it.name.replace(/\s+/g," ").trim(), note:(it.note||"").trim(), ts:Date.now()+k}); n++; });
+      saveLocal(); render(); return {n,dup};
+    }
+    busy=true;
+    try{ const j=await api({action:"add",items:list}); setItems(j.items); return {n:j.added,dup:j.dup||[]}; }
+    catch(e){ toast("No se pudo anotar. Probá de nuevo."); return {n:0,dup:[]}; }
+    finally{ busy=false; }
+  }
+
+  $("addForm").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const name=$("nameIn").value, note=$("noteIn").value;
+    if(!norm(name)) return;
+    $("addBtn").disabled=true; $("addBtn").textContent="Anotando…";
+    const r = await addNames([{name,note}]);
+    $("addBtn").disabled=false; $("addBtn").textContent="Anotar";
+    if(r.dup.length){ $("addErr").textContent=`${r.dup[0]} ya está en la lista.`; $("addErr").hidden=false; }
+    else if(r.n){ $("addErr").hidden=true; $("nameIn").value=""; $("noteIn").value=""; toast("¡Anotado!"); }
+    $("nameIn").focus();
+  });
+  $("bulkBtn").onclick = async ()=>{
+    const names = $("bulkIn").value.split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean);
+    if(!names.length) return;
+    $("bulkBtn").disabled=true; $("bulkBtn").textContent="Anotando…";
+    const r = await addNames(names.map(name=>({name})));
+    $("bulkBtn").disabled=false; $("bulkBtn").textContent="Anotar todos";
+    if(r.n||r.dup.length){ $("bulkIn").value=""; toast(`${r.n} anotado${r.n===1?"":"s"}`+(r.dup.length?` · ${r.dup.length} ya estaba${r.dup.length===1?"":"n"}`:"")); }
+  };
+
+  // ---------- delete ----------
+  let pending=null, pendT;
+  $("list").addEventListener("click", async e=>{
+    const b=e.target.closest(".del"); if(!b) return;
+    const id=b.dataset.id;
+    if(pending!==id){ pending=id; render(); clearTimeout(pendT); pendT=setTimeout(()=>{pending=null;render();},3500); return; }
+    pending=null;
+    if(useLocal){ items=items.filter(i=>i.id!==id); saveLocal(); render(); return; }
+    items=items.filter(i=>i.id!==id); render(); busy=true;
+    try{ const j=await api({action:"delete",id}); setItems(j.items); }
+    catch(err){ toast("No se pudo quitar."); }
+    finally{ busy=false; }
+  });
+
+  // ---------- render ----------
+  const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  $("searchIn").addEventListener("input", render);
+  function render(){
+    $("statCount").textContent = items.length;
+    const last = items[items.length-1];
+    $("statLast").textContent = last ? last.name.split(" ")[0] : "—";
+    $("statLast").style.fontSize = last && last.name.split(" ")[0].length>9 ? "1.5rem" : "";
+    const q = norm($("searchIn").value);
+    const ul=$("list");
+    if(!items.length){ ul.innerHTML='<li class="empty">Todavía no hay nadie anotado.</li>'; return; }
+    const rows = items.map((it,i)=>({it,i})).filter(({it})=>!q||norm(it.name+" "+(it.note||"")).includes(q));
+    if(!rows.length){ ul.innerHTML='<li class="empty">No hay coincidencias.</li>'; return; }
+    ul.innerHTML = rows.map(({it,i})=>`<li><span class="n">${i+1}</span><span class="nm">${esc(it.name)}${it.note?`<small>${esc(it.note)}</small>`:""}</span>${readOnly?"":`<button class="del${pending===it.id?" sure":""}" data-id="${esc(it.id)}" type="button">${pending===it.id?"¿Seguro?":"Quitar"}</button>`}</li>`).join("");
+  }
+
+  // ---------- PDF ----------
+  function buildPdf(){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({unit:"mm",format:"a4"});
+    const W=210, M=18; let y=0;
+    const pink=[194,56,111], soft=[249,220,230], ink=[58,30,43], muted=[122,88,103];
+    const header=(first)=>{
+      doc.setFillColor(...soft); doc.rect(0,0,W,first?42:22,"F");
+      doc.setTextColor(...pink); doc.setFont("helvetica","bold");
+      if(first){ doc.setFontSize(26); doc.text("Recibida Marti",M,22);
+        doc.setFontSize(11); doc.setFont("helvetica","normal"); doc.setTextColor(...muted);
+        const f=new Date().toLocaleDateString("es-AR",{day:"numeric",month:"long",year:"numeric"});
+        doc.text(`Lista de invitados · ${items.length} anotado${items.length===1?"":"s"} · ${f}`,M,31); y=54; }
+      else { doc.setFontSize(13); doc.text("Recibida Marti — lista (cont.)",M,14); y=32; }
+    };
+    header(true);
+    items.forEach((it,i)=>{
+      const h = it.note ? 11 : 8;
+      if(y+h>282){ doc.addPage(); header(false); }
+      if(i%2===0){ doc.setFillColor(255,244,248); doc.rect(M-3,y-5.5,W-2*M+6,h,"F"); }
+      doc.setFont("courier","normal"); doc.setFontSize(10); doc.setTextColor(...muted);
+      doc.text(String(i+1).padStart(3," ")+".",M,y);
+      doc.setFont("helvetica","normal"); doc.setFontSize(12); doc.setTextColor(...ink);
+      doc.text(doc.splitTextToSize(it.name,W-2*M-14)[0],M+12,y);
+      if(it.note){ doc.setFontSize(9); doc.setTextColor(...muted); doc.text(doc.splitTextToSize(it.note,W-2*M-14)[0],M+12,y+4.2); }
+      y+=h;
+    });
+    if(!items.length){ doc.setFontSize(12); doc.setTextColor(...muted); doc.text("Todavía no hay nadie anotado.",M,y); }
+    const pages=doc.getNumberOfPages();
+    for(let p=1;p<=pages;p++){ doc.setPage(p); doc.setFontSize(8); doc.setTextColor(...muted); doc.text(`${p} / ${pages}`,W-M,290,{align:"right"}); }
+    return doc;
+  }
+  $("pdfBtn").onclick = async ()=>{
+    if(!window.jspdf){ toast("No se pudo cargar el generador de PDF."); return; }
+    const doc = buildPdf();
+    try{ doc.save("Lista Recibida Marti.pdf"); }catch(e){ toast("No se pudo descargar el PDF."); }
+  };
+})();
+</script>
+</body>
+</html>
