@@ -106,7 +106,7 @@ header>div:first-child{min-width:0}
     </div>
     <div class="field">
       <label for="pIn">Contraseña</label>
-      <input type="password" id="pIn" required>
+      <input type="password" id="pIn" enterkeyhint="go" required>
     </div>
     <p class="err" id="loginErr" hidden>Usuario o contraseña incorrectos.</p>
     <button class="btn primary" type="submit">Entrar</button>
@@ -185,8 +185,11 @@ header>div:first-child{min-width:0}
     if(ok){ $("loginErr").hidden=true; setAuthed(true); showApp(); }
     else { $("loginErr").hidden=false; $("pIn").value=""; $("pIn").focus(); }
   });
+  // Enter en usuario o contraseña = Entrar
+  ["uIn","pIn"].forEach(id=>$(id).addEventListener("keydown",e=>{
+    if(e.key==="Enter"||e.keyCode===13){ e.preventDefault(); $("loginForm").requestSubmit ? $("loginForm").requestSubmit() : $("loginForm").dispatchEvent(new Event("submit",{cancelable:true})); }
+  }));
   $("logoutBtn").onclick = () => { setAuthed(false); showLogin(); };
-  if(isAuthed()) showApp(); else showLogin();
 
   // ---------- data (Google Sheets) ----------
   const LIVE = /^https:\/\/script\.google\.com\//.test(SCRIPT_URL);
@@ -311,6 +314,8 @@ header>div:first-child{min-width:0}
     const doc = buildPdf();
     try{ doc.save("Lista Recibida Marti.pdf"); }catch(e){ toast("No se pudo descargar el PDF."); }
   };
+  // arrancar al final, cuando ya está todo definido
+  if(isAuthed()) showApp(); else showLogin();
 })();
 </script>
 </body>
