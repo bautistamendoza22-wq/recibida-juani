@@ -182,6 +182,15 @@ header>div:first-child{min-width:0}
   const $ = id => document.getElementById(id);
   const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/\s+/g," ").trim();
   let items = [];          // {id,name,note,ts}
+  // Limpia guiones/viñetas iniciales y pone mayúscula inicial a cada palabra
+  const LOWER = new Set(["de","del","la","las","los","y","da","di","van","von"]);
+  function cleanName(raw){
+    let t = String(raw||"").replace(/^[\s\-–—−•·*_.,;:>]+/,"").replace(/\s+/g," ").trim();
+    return t.toLocaleLowerCase("es").split(" ").map((w,i)=>{
+      if(i>0 && LOWER.has(w)) return w;
+      return w.replace(/(^|[-'’])(\p{L})/gu,(m,p,c)=>p+c.toLocaleUpperCase("es"));
+    }).join(" ");
+  }
   let useLocal = false, readOnly = false, started = false;
 
   // ---------- toast ----------
@@ -190,7 +199,7 @@ header>div:first-child{min-width:0}
 
   // ---------- data (Google Sheets) ----------
   const LIVE = /^https:\/\/script\.google\.com\//.test(SCRIPT_URL);
-  function loadLocal(){ try{ items = JSON.parse(localStorage.getItem("rmList")||"[]"); }catch(e){ items=[]; } render(); }
+  function loadLocal(){ try{ items = JSON.parse(localStorage.getItem("rmList")||"[]").map(i=>({...i,name:cleanName(i.name)})); }catch(e){ items=[]; } render(); }
   function saveLocal(){ try{ localStorage.setItem("rmList", JSON.stringify(items)); }catch(e){} }
   let busy=false;
   async function api(payload){
@@ -199,7 +208,7 @@ header>div:first-child{min-width:0}
       : await fetch(SCRIPT_URL+"?t="+Date.now());
     const j = await r.json(); if(!j.ok) throw new Error(j.error||"error"); return j;
   }
-  function setItems(list){ items=(list||[]).slice().sort((a,b)=>a.ts-b.ts); render(); }
+  function setItems(list){ items=(list||[]).map(i=>({...i,name:cleanName(i.name)})).filter(i=>i.name).sort((a,b)=>a.ts-b.ts); render(); }
   async function refresh(){
     if(busy) return;
     try{ const j=await api(); if(!busy) setItems(j.items); $("syncStatus").textContent="Lista compartida · se actualiza sola cada 15 segundos."; }
@@ -212,6 +221,7 @@ header>div:first-child{min-width:0}
   }
 
   async function addNames(list){
+    list = list.map(it=>({...it,name:cleanName(it.name)})).filter(it=>it.name);
     if(useLocal){
       const existing=new Set(items.map(i=>norm(i.name))); let n=0; const dup=[];
       list.forEach((it,k)=>{ const key=norm(it.name); if(!key) return; if(existing.has(key)){dup.push(it.name);return;} existing.add(key);
