@@ -265,7 +265,8 @@ header>div:first-child{min-width:0}
     const W=210, H=297, M=16, GAP=10, ROW=7.6, BOTTOM=282;
     const colW=(W-2*M-GAP)/2;
     const pink=[194,56,111], soft=[249,220,230], ink=[58,30,43], muted=[122,88,103], zebra=[255,244,248];
-    const list = items.map(i=>cleanName(i.name)).filter(Boolean);
+    const list = items.map(i=>cleanName(i.name)).filter(Boolean)
+      .sort((a,b)=>a.localeCompare(b,"es",{sensitivity:"base",ignorePunctuation:true}));
     const fecha = new Date().toLocaleDateString("es-AR",{day:"numeric",month:"long",year:"numeric"});
     let top;
     const header=(first)=>{
