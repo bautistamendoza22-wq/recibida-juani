@@ -262,7 +262,7 @@ header>div:first-child{min-width:0}
     // Fuente Unicode embebida: tildes, ñ, diéresis y cualquier letra latina
     doc.addFileToVFS("DejaVuSans.ttf", PDF_FONT_R); doc.addFont("DejaVuSans.ttf","DV","normal");
     doc.addFileToVFS("DejaVuSans-Bold.ttf", PDF_FONT_B); doc.addFont("DejaVuSans-Bold.ttf","DV","bold");
-    const W=210, H=297, M=16, GAP=10, ROW=7.6, BOTTOM=282;
+    const W=210, H=297, M=16, GAP=10, BOTTOM=286;
     const colW=(W-2*M-GAP)/2;
     const pink=[194,56,111], soft=[249,220,230], ink=[58,30,43], muted=[122,88,103], zebra=[255,244,248];
     const list = items.map(i=>cleanName(i.name)).filter(Boolean)
@@ -270,21 +270,24 @@ header>div:first-child{min-width:0}
     const fecha = new Date().toLocaleDateString("es-AR",{day:"numeric",month:"long",year:"numeric"});
     let top;
     const header=(first)=>{
-      doc.setFillColor(...soft); doc.rect(0,0,W,first?36:20,"F");
+      doc.setFillColor(...soft); doc.rect(0,0,W,first?24:14,"F");
       doc.setTextColor(...pink); doc.setFont("DV","bold");
-      if(first){
-        doc.setFontSize(24); doc.text("Recibida Marti",M,19);
-        doc.setFont("DV","normal"); doc.setFontSize(10); doc.setTextColor(...muted);
-        doc.text(`Lista de invitados · ${list.length} anotado${list.length===1?"":"s"} · ${fecha}`,M,27);
-        top=46;
-      } else { doc.setFontSize(12); doc.text("Recibida Marti — lista (cont.)",M,13); top=30; }
+      if(first){ doc.setFontSize(22); doc.text("Recibida Marti",M,15.5); top=TOP1; }
+      else { doc.setFontSize(10); doc.text("Recibida Marti (cont.)",M,9.5); top=TOP2; }
     };
+    // Tamaño adaptable: achica renglón y letra para que todo entre en 2 carillas
+    const TOP1=33, TOP2=22;
+    let ROW=7.6;
+    const cap=r=>2*Math.floor((BOTTOM-TOP1)/r)+2*Math.floor((BOTTOM-TOP2)/r);
+    while(ROW>4.3 && cap(ROW)<list.length) ROW=Math.round((ROW-0.05)*100)/100;
+    const FS=Math.min(11,ROW*1.45), NFS=Math.min(8.5,FS*0.8);
     const fitName=(name,maxW)=>{
-      let fs=11; doc.setFont("DV","normal");
-      while(fs>8){ doc.setFontSize(fs); if(doc.getTextWidth(name)<=maxW) return {t:name,fs}; fs-=0.5; }
-      doc.setFontSize(8); let t=name;
+      let fs=FS; doc.setFont("DV","normal");
+      const min=Math.min(8,FS-1);
+      while(fs>min){ doc.setFontSize(fs); if(doc.getTextWidth(name)<=maxW) return {t:name,fs}; fs-=0.5; }
+      doc.setFontSize(min); let t=name;
       while(t.length>1 && doc.getTextWidth(t+"…")>maxW) t=t.slice(0,-1);
-      return {t:t.trimEnd()+"…",fs:8};
+      return {t:t.trimEnd()+"…",fs:min};
     };
     header(true);
     if(!list.length){ doc.setFont("DV","normal"); doc.setFontSize(11); doc.setTextColor(...muted); doc.text("Todavía no hay nadie anotado.",M,top); }
@@ -295,8 +298,8 @@ header>div:first-child{min-width:0}
         const x=M+c*(colW+GAP);
         for(let r=0;r<rows && i<list.length;r++,i++){
           const y=top+r*ROW;
-          if(r%2===0){ doc.setFillColor(...zebra); doc.rect(x-2,y-5.2,colW+4,ROW,"F"); }
-          doc.setFont("DV","normal"); doc.setFontSize(8.5); doc.setTextColor(...muted);
+          if(r%2===0){ doc.setFillColor(...zebra); doc.rect(x-2,y-ROW*0.68,colW+4,ROW,"F"); }
+          doc.setFont("DV","normal"); doc.setFontSize(NFS); doc.setTextColor(...muted);
           doc.text(String(i+1)+".",x+7,y,{align:"right"});
           const f=fitName(list[i],colW-10);
           doc.setFontSize(f.fs); doc.setTextColor(...ink); doc.text(f.t,x+9.5,y);
@@ -308,9 +311,9 @@ header>div:first-child{min-width:0}
     const pages=doc.getNumberOfPages();
     for(let p=1;p<=pages;p++){
       doc.setPage(p);
-      if(list.length>0){ doc.setDrawColor(...soft); doc.setLineWidth(.4); const y0=p===1?40:24; doc.line(W/2,y0,W/2,BOTTOM); }
+      if(list.length>0){ doc.setDrawColor(...soft); doc.setLineWidth(.4); const y0=p===1?TOP1-6:TOP2-6; doc.line(W/2,y0,W/2,BOTTOM); }
       doc.setFont("DV","normal"); doc.setFontSize(8); doc.setTextColor(...muted);
-      doc.text(`${p} / ${pages}`,W-M,H-8,{align:"right"});
+      doc.text(`${p} / ${pages}`,W-M,H-5,{align:"right"});
     }
     return doc;
   }
