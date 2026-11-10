@@ -9,9 +9,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
-  --bg:#F6E4EA; --surface:#FFF7F9; --ink:#3A1E2B; --muted:#7A5867; --line:#EBCBD6;
-  --accent:#C2386F; --accent-ink:#ffffff; --accent-soft:#F9DCE6;
-  --g1:#E0679A; --g2:#F7A8C4; --g3:#C2386F; --g4:#FFC9B9;
+  --bg:#E3F4F3; --surface:#F6FCFC; --ink:#133B3D; --muted:#4F7476; --line:#C4E4E2;
+  --accent:#0B7F7D; --accent-ink:#ffffff; --accent-soft:#D2F0EE;
+  --g1:#2BB3B0; --g2:#8FDCD6; --g3:#0B7F7D; --g4:#BDEFE6;
   --bad:#a3213b; --bad-soft:#f6d3da;
   --f-display:"Gloock",Georgia,serif; --f-body:"Fredoka",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
   color-scheme:light;
@@ -35,12 +35,12 @@ body::after{background:
 @keyframes inUp{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
 .blobs{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .blobs i{position:absolute;border-radius:50%;filter:blur(48px);opacity:.55;will-change:transform}
-.blobs i:nth-child(1){width:34vmax;height:34vmax;left:-8vmax;top:-6vmax;background:#F7A8C4;animation:b1 8s ease-in-out infinite alternate}
-.blobs i:nth-child(2){width:26vmax;height:26vmax;right:-6vmax;top:20vh;background:#E0679A;opacity:.38;animation:b2 6.5s ease-in-out infinite alternate}
-.blobs i:nth-child(3){width:30vmax;height:30vmax;left:30vw;bottom:-12vmax;background:#FFC9B9;animation:b3 7.5s ease-in-out infinite alternate}
-.blobs i:nth-child(4){width:18vmax;height:18vmax;left:12vw;top:45vh;background:#C2386F;opacity:.25;animation:b4 5.5s ease-in-out infinite alternate}
-.blobs i:nth-child(5){width:22vmax;height:22vmax;right:18vw;top:-8vmax;background:#F9C6DA;animation:b5 6s ease-in-out infinite alternate}
-.blobs i:nth-child(6){width:16vmax;height:16vmax;right:4vw;bottom:6vh;background:#D9A2F0;opacity:.35;animation:b6 5s ease-in-out infinite alternate}
+.blobs i:nth-child(1){width:34vmax;height:34vmax;left:-8vmax;top:-6vmax;background:#8FDCD6;animation:b1 8s ease-in-out infinite alternate}
+.blobs i:nth-child(2){width:26vmax;height:26vmax;right:-6vmax;top:20vh;background:#2BB3B0;opacity:.38;animation:b2 6.5s ease-in-out infinite alternate}
+.blobs i:nth-child(3){width:30vmax;height:30vmax;left:30vw;bottom:-12vmax;background:#BDEFE6;animation:b3 7.5s ease-in-out infinite alternate}
+.blobs i:nth-child(4){width:18vmax;height:18vmax;left:12vw;top:45vh;background:#0B7F7D;opacity:.25;animation:b4 5.5s ease-in-out infinite alternate}
+.blobs i:nth-child(5){width:22vmax;height:22vmax;right:18vw;top:-8vmax;background:#B5E9E6;animation:b5 6s ease-in-out infinite alternate}
+.blobs i:nth-child(6){width:16vmax;height:16vmax;right:4vw;bottom:6vh;background:#9FD8F0;opacity:.35;animation:b6 5s ease-in-out infinite alternate}
 @keyframes b1{to{transform:translate(14vw,10vh) scale(1.15)}}
 @keyframes b2{to{transform:translate(-16vw,14vh) scale(.85)}}
 @keyframes b3{to{transform:translate(-12vw,-16vh) scale(1.2)}}
@@ -73,20 +73,20 @@ input[type=text],input[type=password]{width:100%;min-width:0;font:inherit;backgr
 .photo::before{content:"";position:absolute;inset:12% 6% 4%;border-radius:50%;background:radial-gradient(closest-side,color-mix(in oklab,var(--g2) 70%,transparent),transparent);filter:blur(10px);z-index:0}
 .photo img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block;
   -webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent 100%),linear-gradient(to right,transparent 0,#000 22%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,#000 76%,transparent 100%),linear-gradient(to right,transparent 0,#000 22%);mask-composite:intersect;
-  filter:drop-shadow(0 8px 18px rgba(194,56,111,.25))}
-.star{position:absolute;z-index:2;fill:#E0679A;width:22px;height:22px;transform-origin:center;scale:1.35;filter:drop-shadow(0 0 6px rgba(247,168,196,.9));animation:twinkle 2.4s ease-in-out infinite}
+  filter:drop-shadow(0 8px 18px rgba(11,127,125,.25))}
+.star{position:absolute;z-index:2;fill:#2BB3B0;width:22px;height:22px;transform-origin:center;scale:1.35;filter:drop-shadow(0 0 6px rgba(143,220,214,.9));animation:twinkle 2.4s ease-in-out infinite}
 .star.s1{left:-6%;top:8%;width:30px;height:30px}
-.star.s2{left:14%;top:-4%;width:18px;height:18px;fill:#F7A8C4;animation-delay:.4s}
+.star.s2{left:14%;top:-4%;width:18px;height:18px;fill:#8FDCD6;animation-delay:.4s}
 .star.s3{left:48%;top:-9%;width:26px;height:26px;animation-delay:.9s}
-.star.s4{right:10%;top:-2%;width:20px;height:20px;fill:#C2386F;animation-delay:1.3s}
-.star.s5{right:-8%;top:16%;width:32px;height:32px;fill:#F28AB5;animation-delay:.2s}
+.star.s4{right:10%;top:-2%;width:20px;height:20px;fill:#0B7F7D;animation-delay:1.3s}
+.star.s5{right:-8%;top:16%;width:32px;height:32px;fill:#5FCFCB;animation-delay:.2s}
 .star.s6{right:-12%;top:42%;width:18px;height:18px;animation-delay:1.7s}
-.star.s7{right:-6%;top:66%;width:26px;height:26px;fill:#F7A8C4;animation-delay:.6s}
-.star.s8{right:8%;bottom:2%;width:18px;height:18px;fill:#C2386F;animation-delay:1.1s}
+.star.s7{right:-6%;top:66%;width:26px;height:26px;fill:#8FDCD6;animation-delay:.6s}
+.star.s8{right:8%;bottom:2%;width:18px;height:18px;fill:#0B7F7D;animation-delay:1.1s}
 .star.s9{left:40%;bottom:-4%;width:24px;height:24px;animation-delay:1.9s}
-.star.s10{left:2%;bottom:6%;width:20px;height:20px;fill:#F28AB5;animation-delay:.3s}
-.star.s11{left:-12%;top:52%;width:26px;height:26px;fill:#F7A8C4;animation-delay:1.5s}
-.star.s12{left:-4%;top:30%;width:14px;height:14px;fill:#C2386F;animation-delay:.8s}
+.star.s10{left:2%;bottom:6%;width:20px;height:20px;fill:#5FCFCB;animation-delay:.3s}
+.star.s11{left:-12%;top:52%;width:26px;height:26px;fill:#8FDCD6;animation-delay:1.5s}
+.star.s12{left:-4%;top:30%;width:14px;height:14px;fill:#0B7F7D;animation-delay:.8s}
 @keyframes twinkle{0%,100%{transform:scale(1) rotate(0deg);opacity:1}50%{transform:scale(.7) rotate(25deg);opacity:.55}}
 @media (max-width:600px){.hero{grid-template-columns:1fr;text-align:center}.photo{justify-self:center;width:min(230px,62vw);margin-top:6px}}
 .count{display:inline-block;vertical-align:middle;margin-left:6px;background:var(--accent);color:var(--accent-ink);font-family:var(--f-body);font-weight:600;font-size:.85rem;line-height:1;padding:5px 10px;border-radius:99px}
@@ -296,7 +296,7 @@ header>div:first-child{min-width:0}
     doc.addFileToVFS("DejaVuSans-Bold.ttf", PDF_FONT_B); doc.addFont("DejaVuSans-Bold.ttf","DV","bold");
     const W=210, H=297, M=16, GAP=10, BOTTOM=286;
     const colW=(W-2*M-GAP)/2;
-    const pink=[194,56,111], soft=[249,220,230], ink=[58,30,43], muted=[122,88,103], zebra=[255,244,248];
+    const pink=[11,127,125], soft=[210,240,238], ink=[19,59,61], muted=[79,116,118], zebra=[240,250,249];
     const list = items.map(i=>cleanName(i.name)).filter(Boolean)
       .sort((a,b)=>a.localeCompare(b,"es",{sensitivity:"base",ignorePunctuation:true}));
     const fecha = new Date().toLocaleDateString("es-AR",{day:"numeric",month:"long",year:"numeric"});
